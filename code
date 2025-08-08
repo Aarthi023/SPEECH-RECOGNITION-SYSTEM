@@ -1,0 +1,64 @@
+#include <SoftwareSerial.h>
+SoftwareSerial mySerial(2, 3); // RX, TX
+
+const int whiteLED = 4;
+const int redLED = 5;
+const int greenLED = 6;
+const int blueLED = 7;
+const int buzzer = 8;
+
+void setup() {
+  Serial.begin(9600);
+  mySerial.begin(9600);
+  
+  pinMode(whiteLED, OUTPUT);
+  pinMode(redLED, OUTPUT);
+  pinMode(greenLED, OUTPUT);
+  pinMode(blueLED, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  
+  Serial.println("VR Module Ready");
+}
+
+void loop() {
+  if (mySerial.available()) {
+    int command = mySerial.read();
+    Serial.print("Command ID: ");
+    Serial.println(command);
+
+    switch(command) {
+      case 0:
+        digitalWrite(whiteLED, HIGH);
+        Serial.println("White LED ON");
+        break;
+      case 1:
+        digitalWrite(redLED, HIGH);
+        Serial.println("Red LED ON");
+        break;
+      case 2:
+        digitalWrite(greenLED, HIGH);
+        Serial.println("Green LED ON");
+        break;
+      case 3:
+        digitalWrite(blueLED, HIGH);
+        Serial.println("Blue LED ON");
+        break;
+      case 4:
+        // Turn off all LEDs
+        digitalWrite(whiteLED, LOW);
+        digitalWrite(redLED, LOW);
+        digitalWrite(greenLED, LOW);
+        digitalWrite(blueLED, LOW);
+        Serial.println("All LEDs OFF");
+        break;
+      case 5:
+        // Trigger buzzer
+        tone(buzzer, 1000, 300);
+        Serial.println("Buzzer Activated");
+        break;
+      default:
+        Serial.println("Unknown Command");
+        break;
+    }
+  }
+}
